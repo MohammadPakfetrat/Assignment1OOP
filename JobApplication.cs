@@ -7,7 +7,7 @@ namespace Assignment1OOP
         public string CompanyName { get; set; }
         public string PositionTitle { get; set; }
         public enum status { Applied, Interviewing, Offered, Rejected }
-        public DateTime ApplicationDate { get; set; }
+        public DateTime ApplicationDate { get; set; } 
         public DateTime? ResponseDate { get; set; }
         public int SalaryExpectation { get; set; }
 
