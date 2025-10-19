@@ -6,7 +6,7 @@ namespace Assignment1OOP
         // atributer
         public string CompanyName { get; set; }
         public string PositionTitle { get; set; }
-        public enum status { Applied, Interviewing, Offered, Rejected }
+        public ApplicationStatus Status { get; set; }
         public DateTime ApplicationDate { get; set; }
         public DateTime? ResponseDate { get; set; }
         public int SalaryExpectation { get; set; }
@@ -32,6 +32,15 @@ namespace Assignment1OOP
         public string GetSummery()
         {
             return $"Company: {CompanyName}, Position: {PositionTitle}, Applied on: {ApplicationDate:yyyy-MM-dd}, Salary Expectation: {SalaryExpectation} USD";
+        }
+
+        // enum för status
+        public enum ApplicationStatus
+        {
+            Applied,
+            Interviewing,
+            Offered,
+            Rejected
         }
     }
 }
