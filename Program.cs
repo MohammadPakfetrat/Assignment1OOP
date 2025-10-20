@@ -15,9 +15,9 @@ namespace JobbAnsokningar
                 //Objekt till klassen JobManager 
                 JobManager jobManager = new JobManager();
 
-               
 
-                // Boolesk variabel som styr huvudloopen (true = programmet körs)
+
+                // den kör loopen så länge running är true
                 bool running = true;
 
                 // Huvudmeny-loop — fortsätter tills användaren väljer att avsluta

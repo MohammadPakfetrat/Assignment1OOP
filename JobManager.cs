@@ -1,6 +1,6 @@
 ﻿
 
-using System.Security.Cryptography.X509Certificates;
+
 using static Assignment1OOP.JobApplication;
 
 namespace Assignment1OOP
@@ -9,6 +9,8 @@ namespace Assignment1OOP
     {
         // Skapar en lista för att lagra alla jobbansökningar
         public List<JobApplication> applications = new List<JobApplication>();
+
+        // 1. Lägg till en ny ansökan 
         public void AddJob()
         {
             // Frågar efter företagsnamn
@@ -31,7 +33,7 @@ namespace Assignment1OOP
             // Bekräftar för användaren att ansökan har lagts till
             Console.WriteLine("Ansökan tillagd!");
         }
-
+        // 2. Visa alla ansökningar
         public void ShowAll()
         {
             // Kollar om det finns några ansökningar
@@ -47,20 +49,18 @@ namespace Assignment1OOP
                     Console.WriteLine(app.GetSummery());
             }
         }
-
+        // 3. Filtrera ansökningar efter status
         public void ShowByStatus()
         {
             // Frågar användaren vilken status de vill filtrera på
             Console.WriteLine("Ange status att filtrera efter (Applied, Interviewing, Offered, Rejected): ");
-            string input = Console.ReadLine();
+             
 
             // Försöker omvandla textinmatningen till en giltig ApplicationStatus-enum
-            if (Enum.TryParse(input, true, out ApplicationStatus chosenStatus))
+            if (Enum.TryParse(Console.ReadLine(), true, out ApplicationStatus chosenStatus))
             {
-                // Filtrerar listan med hjälp av LINQ — tar bara med de som matchar statusen
-                var filtered = applications
-                    .Where(a => a.Status == chosenStatus)
-                    .ToList();
+                // Filtrerar listan med hjälp av LINQ - tar bara med de som matchar statusen
+                var filtered = applications.Where(a => a.Status == chosenStatus).ToList();
 
                 // Om det finns resultat, skriv ut dem
                 if (filtered.Any())
@@ -80,7 +80,7 @@ namespace Assignment1OOP
                 Console.WriteLine("Ogiltig status.");
             }
         }
-
+        // 4. Sortera ansökningar efter datum 
         public void ShowByDate()
         {
             // Använder LINQ för att sortera listan efter ApplicationDate
@@ -92,6 +92,7 @@ namespace Assignment1OOP
 
         }
 
+        // 5. Uppdatera ansökningsstatus 
         public void UpdateStatus()
         {
             // Frågar vilket företag användaren vill uppdatera
@@ -126,6 +127,7 @@ namespace Assignment1OOP
             }
         }
 
+        // 6. Ta bort en ansökan 
         public void DeleteJob() 
         {
             // Frågar vilket företag som ska tas bort
