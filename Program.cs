@@ -35,7 +35,8 @@ namespace JobbAnsokningar
 
                     // Ber användaren välja ett alternativ
                     Console.Write("Välj ett alternativ (1-7): ");
-
+                   
+                  
                     // Läser in användarens menyval
                     switch (Console.ReadLine())
                     {
@@ -52,8 +53,8 @@ namespace JobbAnsokningar
                             break;
 
                         // 3. Filtrera ansökningar efter status
-                        case "3":
-                            jobManager.ShowByStatus();
+                        case "3":                          
+                            jobManager.ShowByStatus();                           
                             break;
 
                         // 4. Sortera ansökningar efter datum 
@@ -62,8 +63,37 @@ namespace JobbAnsokningar
                             break;
 
                         // 5. Uppdatera ansökningsstatus 
-                        case "5":
-                            jobManager.UpdateStatus(); 
+                        case "5":                            
+                            Console.WriteLine("Enter Company Name to update:");                           
+                            string companyName = Console.ReadLine();                            
+                            Console.WriteLine("Enter new Status (0: Applied, 1: Interview, 2: Offer, 3: Rejected):");                           
+                            int statusInput = int.Parse(Console.ReadLine());
+                            ApplicationStatus newStatus = (ApplicationStatus)statusInput;                            
+                            Console.WriteLine("Enter Response Date (yyyy-mm-dd) or leave blank:");                           
+                            string responseDateStr = Console.ReadLine();
+                            DateTime? responseDate = string.IsNullOrWhiteSpace(responseDateStr) ? null : DateTime.Parse(responseDateStr);
+
+                            // Här: visa status i färg innan uppdatering
+                            Console.Write("Updating status to: ");
+                            switch (newStatus)
+                            {
+                                case ApplicationStatus.Applied:
+                                    Console.ForegroundColor = ConsoleColor.Yellow;
+                                    break;
+                                case ApplicationStatus.Interview:
+                                    Console.ForegroundColor = ConsoleColor.Blue;
+                                    break;
+                                case ApplicationStatus.Offered:
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    break;
+                                case ApplicationStatus.Rejected:
+                                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                                    break;
+                            }
+                            Console.WriteLine(newStatus);
+                            Console.ResetColor();
+
+                            jobManager.UpdateStatus(companyName, newStatus, responseDate);
                             break;
 
                         // 6. Ta bort en ansökan 

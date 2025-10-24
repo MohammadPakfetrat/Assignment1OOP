@@ -13,14 +13,7 @@ namespace Assignment1OOP
 
         // konstruktor
 
-        public JobApplication(string companyName, string positionTitle, DateTime applicationDate, DateTime? responseDate, int salaryExpectation)
-        {
-            CompanyName = companyName;
-            PositionTitle = positionTitle;
-            ApplicationDate = applicationDate;
-            SalaryExpectation = salaryExpectation;
-            ResponseDate = responseDate;
-        }
+      
 
         // metoder
 
@@ -38,7 +31,7 @@ namespace Assignment1OOP
         public enum ApplicationStatus
         {
             Applied,
-            Interviewing,
+            Interview,
             Offered,
             Rejected
         }

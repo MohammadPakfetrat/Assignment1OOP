@@ -1,7 +1,9 @@
 ﻿
 
 
+using System;
 using static Assignment1OOP.JobApplication;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Assignment1OOP
 {
@@ -21,17 +23,39 @@ namespace Assignment1OOP
             Console.Write("Position: ");
             string positionTitle = Console.ReadLine();
 
+            Console.WriteLine("Status (0: Applied, 1: Interviewing, 2: Offer, 3: Rejected)");
+            int jobStatus = int.Parse(Console.ReadLine());
+            ApplicationStatus status = (ApplicationStatus)jobStatus;
+            
+            Console.WriteLine("Application Date (yyyy-mm-dd)");
+            DateTime applicationDate = DateTime.Parse(Console.ReadLine());
+
+            Console.WriteLine("Response Date (yyyy-mm-dd) or leave blank");
+            DateTime responseDateInput = Convert.ToDateTime(Console.ReadLine());
+
             // Frågar efter löneförväntan
             Console.Write("Löneförväntan (USD): ");
             int salaryExpectation = Convert.ToInt32(Console.ReadLine());
 
             // Skapar ett nytt JobApplication-objekt med aktuell tid som ansökningsdatum
             // och lägger till det i listan
-            var job = new JobApplication(companyName, positionTitle, DateTime.Now, null, salaryExpectation);
-            applications.Add(job);
+    
+            
 
             // Bekräftar för användaren att ansökan har lagts till
             Console.WriteLine("Ansökan tillagd!");
+
+
+            JobApplication jobApp = new JobApplication
+            {
+                CompanyName = companyName,
+                PositionTitle = positionTitle,
+                Status = status,
+                ApplicationDate = applicationDate,
+                SalaryExpectation = salaryExpectation,
+                ResponseDate = responseDateInput,
+            };
+                applications.Add(jobApp);
         }
         // 2. Visa alla ansökningar
         public void ShowAll()
@@ -52,32 +76,23 @@ namespace Assignment1OOP
         // 3. Filtrera ansökningar efter status
         public void ShowByStatus()
         {
-            // Frågar användaren vilken status de vill filtrera på
-            Console.WriteLine("Ange status att filtrera efter (Applied, Interviewing, Offered, Rejected): ");
-             
+            Console.Write("Filter by status (1=Applied, 2=Interview, 3=Offer, 4=Rejected): ");
+            int num = Convert.ToInt32(Console.ReadLine());
+            ApplicationStatus status = (ApplicationStatus)num;
 
-            // Försöker omvandla textinmatningen till en giltig ApplicationStatus-enum
-            if (Enum.TryParse(Console.ReadLine(), true, out ApplicationStatus chosenStatus))
+            var filtered = applications.Where(a => a.Status == status);
+
+            if (!filtered.Any())
             {
-                // Filtrerar listan med hjälp av LINQ - tar bara med de som matchar statusen
-                var filtered = applications.Where(a => a.Status == chosenStatus).ToList();
-
-                // Om det finns resultat, skriv ut dem
-                if (filtered.Any())
-                {
-                    Console.WriteLine($"Ansökningar med status {chosenStatus}:");
-                    foreach (var app in filtered)
-                        Console.WriteLine(app.GetSummery());
-                }
-                else
-                {
-                    Console.WriteLine($"Inga ansökningar med status {chosenStatus} hittades.");
-                }
+                Console.WriteLine($"No applications with status {status}");
             }
             else
             {
-                // hanterar ogiltig statusinmatning
-                Console.WriteLine("Ogiltig status.");
+                foreach (var a in filtered)
+                {
+
+                    Console.WriteLine(a.GetSummery());
+                }
             }
         }
         // 4. Sortera ansökningar efter datum 
@@ -93,38 +108,21 @@ namespace Assignment1OOP
         }
 
         // 5. Uppdatera ansökningsstatus 
-        public void UpdateStatus()
+        public void UpdateStatus(string companyName, ApplicationStatus newStatus, DateTime? responseDate = null)
         {
-            // Frågar vilket företag användaren vill uppdatera
-            Console.Write("Ange företagsnamn för ansökan att uppdatera: ");
-            string nameToUpdate = Console.ReadLine();
+            // Hitta första ansökan som matchar företagsnamnet
+            var job = applications.FirstOrDefault(a => a.CompanyName.Equals(companyName, StringComparison.OrdinalIgnoreCase));
 
-            // Hittar första ansökan med matchande företagsnamn
-            var toUpdate = applications.FirstOrDefault(a => a.CompanyName.Equals(nameToUpdate, StringComparison.OrdinalIgnoreCase));
-
-            if (toUpdate != null)
+            if (job == null)
             {
-                // Frågar efter den nya statusen
-                Console.WriteLine("Ny status (Applied, Interviewing, Offered, Rejected): ");
-                string newStatusInput = Console.ReadLine();
+                Console.WriteLine("Company not found.");
+                return;
+            }
 
-                // Omvandlar text till enum och uppdaterar ansökningen
-                if (Enum.TryParse(newStatusInput, true, out ApplicationStatus newStatus))
-                {
-                    toUpdate.Status = newStatus;          // Uppdaterar status
-                    toUpdate.ResponseDate = DateTime.Now; // Sparar tidpunkt för ändringen
-                    Console.WriteLine("Status uppdaterad!");
-                }
-                else
-                {
-                    Console.WriteLine("Ogiltig status.");
-                }
-            }
-            else
-            {
-                // Om inget företag hittades
-                Console.WriteLine("Ingen ansökan hittades för det företaget.");
-            }
+            job.Status = newStatus;
+            job.ResponseDate = responseDate;
+
+            Console.WriteLine($"Status updated for {job.CompanyName} to {job.Status}.");
         }
 
         // 6. Ta bort en ansökan 
